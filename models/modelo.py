@@ -1,4 +1,3 @@
 class Modelo:
-    def __init__ (self, nome, idmodelo = None):
-        self.idmodelo = idmodelo
+    def __init__ (self, nome):
         self.nome = nome
