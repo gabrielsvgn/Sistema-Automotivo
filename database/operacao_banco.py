@@ -10,8 +10,10 @@ class BancoMarca:
     # Adicionar Marca
     def adicionar_marca(self, marca):
         try:
-            self.cursor.execute("INSERT INTO marca (nome) VALUES (%s)", (marca.nome,))
+            self.cursor.execute("INSERT INTO marca (nome) VALUES (%s) RETURNING idmarca", (marca.nome,))
+            id = self.cursor.fetchone()[0]
             self.conexao.commit()
+            marca.idmarca = id
         except Exception as e:
             self.conexao.rollback()
             raise e
@@ -50,15 +52,12 @@ class BancoModelo:
         self.cursor = self.conexao.cursor()
 
     # Adicionar Modelo
-    def adicionar_modelo(self, modelo_nome, nome_marca):
+    def adicionar_modelo(self, modelo):
         try:
-            self.cursor.execute("""
-    INSERT INTO modelo (idmarca, nome)
-    SELECT idmarca, %s FROM marca WHERE nome = %s
-""", (modelo_nome, nome_marca))
+            self.cursor.execute("""INSERT INTO modelo (idmarca, nome) VALUES (%s, %s) RETURNING idmodelo""", (modelo.idmarca, modelo.nome,))
+            id = self.cursor.fetchone()[0]
             self.conexao.commit()
-            if self.cursor.rowcount == 0:
-                print("Marca não encontrada")
+            modelo.idmodelo = id
         except Exception as e:
             self.conexao.rollback()
             raise e
@@ -101,7 +100,25 @@ class BancoModelo:
             self.conexao.rollback()
             raise e
         
-        
+# Banco Carro
+class BancoCarro:
+    def __init__(self):
+        self.conexao = conectar()
+        self.cursor = self.conexao.cursor()
+
+    def adicionar_carro(self, carro):
+        try:
+            if carro.idmodelo is None:
+                ValueError("Modelo precisa estar salvo no banco antes")
+                self.cursor.execute("""INSERT INTO carro (idmodelo, ano, km, valor, cor, placa, disponivel) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING idcarro""", 
+        (carro.idmodelo, carro.ano, carro.km, carro.valor, carro.cor, carro.placa, "S" if carro.disponivel else "N",))
+                id = self.cursor.fetchone()[0]
+                self.conexao.commit()
+                carro.idcarro = id
+        except Exception as e:
+                self.conexao.rollback()
+                raise e
 
         
 

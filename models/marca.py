@@ -1,5 +1,5 @@
 class Marca:
-    def __init__ (self, nome, idmarca = None):
+    def __init__ (self, idmarca, nome):
+        self.idmarca = idmarca
         self.nome = nome
-        self.idmarca
        
