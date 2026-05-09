@@ -8,7 +8,7 @@ class BancoMarca:
         self.cursor = self.conexao.cursor()
 
     
-    def post_car_brand(self, marca):
+    def create_car_brand(self, marca):
         try:
             self.cursor.execute("INSERT INTO marca (nome) VALUES (%s) RETURNING idmarca", (marca.nome,))
             id = self.cursor.fetchone()[0]
@@ -28,7 +28,7 @@ class BancoMarca:
              raise e
 
     
-    def put_car_brand(self, novo_nome, idmarca):
+    def update_car_brand(self, novo_nome, idmarca):
         try:
             self.cursor.execute("UPDATE marca SET nome = %s WHERE idmarca = %s", (novo_nome.nome, idmarca,))
             self.conexao.commit()
@@ -37,7 +37,7 @@ class BancoMarca:
             raise e
         
     
-    def get_car_brand(self):
+    def read_car_brand(self):
         try:
             self.cursor.execute("SELECT * FROM marca")
             return self.cursor.fetchall()
@@ -52,7 +52,7 @@ class BancoModelo:
         self.cursor = self.conexao.cursor()
 
     
-    def post_car_model(self, modelo):
+    def create_car_model(self, modelo):
         try:
             self.cursor.execute("""INSERT INTO modelo (idmarca, nome) VALUES (%s, %s) RETURNING idmodelo""", (modelo.idmarca, modelo.nome,))
             id = self.cursor.fetchone()[0]
@@ -62,9 +62,7 @@ class BancoModelo:
             self.conexao.rollback()
             raise e
             
-
-    
-    def put_car_model(self, idmodelo, novo_nome):
+    def update_car_model(self, idmodelo, novo_nome):
         try:
             self.cursor.execute("""UPDATE modelo SET nome = %s WHERE idmodelo = %s""", (novo_nome, idmodelo,))
             self.conexao.commit()
@@ -72,7 +70,6 @@ class BancoModelo:
             self.conexao.rollback()
             raise e
 
-    
     def delete_car_model(self, idmodelo):
         try:
             self.cursor.execute("DELETE FROM modelo WHERE idmodelo = %s", (idmodelo,))
@@ -82,9 +79,8 @@ class BancoModelo:
         except Exception as e:
             self.conexao.rollback()
             raise e
-        
-          
-    def get_car_model(self):
+                 
+    def read_car_model(self):
         try:
             self.cursor.execute("""SELECT
                                 mdl.nome,
@@ -95,8 +91,6 @@ class BancoModelo:
                                 marca mrc on mrc.idmarca = mdl.idmarca
                                 """)
             return self.cursor.fetchall()
-            
-       
         except Exception as e:
             raise e
 
@@ -107,10 +101,8 @@ class BancoCarro:
         self.conexao = conectar()
         self.cursor = self.conexao.cursor()
 
-    def adicionar_carro(self, carro):
+    def create_car(self, carro):
         try:
-            if carro.idmodelo is None:
-                ValueError("Modelo precisa estar salvo no banco antes")
                 self.cursor.execute("""INSERT INTO carro (idmodelo, ano, km, valor, cor, placa, disponivel) 
         VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING idcarro""", 
         (carro.idmodelo, carro.ano, carro.km, carro.valor, carro.cor, carro.placa, "S" if carro.disponivel else "N",))
@@ -121,10 +113,51 @@ class BancoCarro:
                 self.conexao.rollback()
                 raise e
 
+    def update_car_value (self, id, valor):
+        try:
+            self.cursor.execute("UPDATE carro SET valor = %s WHERE idcarro = %s", (valor, id,))
+            self.conexao.commit()
+        except Exception as e:
+            raise e
         
+    def delete_car (self, id):
+        try:
+                self.cursor.execute("DELETE FROM carro WHERE idcarro = %s", (id,))
+                self.conexao.commit()
+        except Exception as e:
+            raise e
+        
+    def sell_car(self, id):
+        try:
+            self.cursor.execute("UPDATE carro SET disponivel = %s WHERE idcarro = %s", ('N', id,))
+            self.conexao.commit()
+        except Exception as e:
+            raise e
+        
+    def read_car(self):
+        try:
+            self.cursor.execute("SELECT * from view_carros")
+            cars = self.cursor.fetchall()
+            for lista in cars:
+                print(lista)
+        except Exception as e:
+            raise e
+        
+    def update_car_km(self, novo_valor, id):
+        try:
+            self.cursor.execute("UPDATE carro SET km = %s WHERE idcarro = %s", (novo_valor, id,))
+            self.conexao.commit()
+        except Exception as e:
+            raise e
 
-
-
+    def read_available_cars(self):
+        try:
+            self.cursor.execute("SELECT * FROM carros_disponiveis")
+            cars = self.cursor.fetchall()
+            for lista in cars:
+                print(lista)
+        except Exception as e:
+            raise e
 
 
 
