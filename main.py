@@ -1,13 +1,13 @@
 from database.conexao import conectar
 from models.marca import Marca
-from database.operacao_banco import BancoMarca
-from database.operacao_banco import BancoModelo
-from database.operacao_banco import BancoCarro
+from repositories.marca_repository import MarcaRepository
+from repositories.modelo_repository import ModeloRepository
+from repositories.carro_repository import CarroRepository
 from models.modelo import Modelo
 from models.carro import Carro
 
-banco_carro = BancoCarro()
-banco_marca = BancoMarca()
+banco_carro = CarroRepository()
+banco_marca = MarcaRepository()
 
 conectar()
 marca_chevrolet = Marca(nome="Chevrolet", idmarca=46)
