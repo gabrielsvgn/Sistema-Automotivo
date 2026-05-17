@@ -7,11 +7,14 @@ from models.modelo import Modelo
 from models.carro import Carro
 
 banco_carro = BancoCarro()
+banco_marca = BancoMarca()
 
 conectar()
 marca_chevrolet = Marca(nome="Chevrolet", idmarca=46)
 marca_fiat = Marca(nome="Fiat", idmarca=47)
 marca_audi = Marca(nome="Audi", idmarca=48)
+marca_ford = Marca(nome="Ford", idmarca= 49)
+
 
 modelo_astra = Modelo(nome="Astra", idmarca=marca_chevrolet.idmarca, idmodelo=13)
 modelo_cobalt = Modelo(nome="Cobalt", idmarca=marca_chevrolet.idmarca, idmodelo=14)
@@ -27,7 +30,7 @@ astra = Carro(
     disponivel=True,
 )
 
-banco_carro.read_available_cars()
+banco_marca.create_car_brand(marca_ford)
 
 
 

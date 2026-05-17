@@ -18,7 +18,7 @@ class BancoMarca:
             self.conexao.rollback()
             raise e
 
-   
+
     def delete_car_brand(self, idmarca):
         try:
             self.cursor.execute("DELETE FROM marca WHERE idmarca = %s", (idmarca,))
@@ -37,7 +37,7 @@ class BancoMarca:
             raise e
         
     
-    def read_car_brand(self):
+    def read_all_car_brand(self):
         try:
             self.cursor.execute("SELECT * FROM marca")
             return self.cursor.fetchall()
@@ -45,6 +45,15 @@ class BancoMarca:
             self.conexao.rollback()
             raise e
 
+
+    def read_car_brand (self, marca):
+        try:
+            self.cursor.execute("SELECT lower(nome) FROM marca WHERE nome = %s", (marca,))
+            carro = self.cursor.fetchall()
+            for lista in carro:
+                print(lista)
+        except Exception as e:
+            raise e
 
 class BancoModelo:
     def __init__ (self):
@@ -93,8 +102,6 @@ class BancoModelo:
             return self.cursor.fetchall()
         except Exception as e:
             raise e
-
-        
 
 class BancoCarro:
     def __init__(self):
@@ -153,12 +160,16 @@ class BancoCarro:
     def read_available_cars(self):
         try:
             self.cursor.execute("SELECT * FROM carros_disponiveis")
-            cars = self.cursor.fetchall()
-            for lista in cars:
-                print(lista)
+            return self.cursor.fetchall()
         except Exception as e:
             raise e
 
+    def read_car_plate(self, placa):
+        try:
+            self.cursor.execute("SELECT * from read_car_plate WHERE placa = %s", (placa.upper(),))
+            return self.cursor.fetchall()
+        except Exception as e:
+            raise e
 
 
 

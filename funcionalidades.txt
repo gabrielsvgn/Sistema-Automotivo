@@ -1,2 +1,0 @@
-1 - Criar a classe carro
-2 - Criar a classe de gerenciamento dos carros no banco
