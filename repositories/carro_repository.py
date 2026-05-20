@@ -64,6 +64,8 @@ class CarroRepository:
     def read_car_plate(self, placa):
         try:
             self.cursor.execute("SELECT * from read_car_plate WHERE placa = %s", (placa.upper(),))
-            return self.cursor.fetchall()
+            carro =  self.cursor.fetchall()
+            print(carro)
+        
         except Exception as e:
             raise e
