@@ -1,36 +1,45 @@
 from database.conexao import conectar
 from models.marca import Marca
+from models.modelo import Modelo
+from models.carro import Carro
 from repositories.marca_repository import MarcaRepository
 from repositories.modelo_repository import ModeloRepository
 from repositories.carro_repository import CarroRepository
-from models.modelo import Modelo
-from models.carro import Carro
 
 banco_carro = CarroRepository()
 banco_marca = MarcaRepository()
+banco_modelo = ModeloRepository()
 
 conectar()
-marca_chevrolet = Marca(nome="Chevrolet", idmarca=46)
-marca_fiat = Marca(nome="Fiat", idmarca=47)
-marca_audi = Marca(nome="Audi", idmarca=48)
-marca_ford = Marca(nome="Ford", idmarca= 49)
 
 
-modelo_astra = Modelo(nome="Astra", idmarca=marca_chevrolet.idmarca, idmodelo=13)
-modelo_cobalt = Modelo(nome="Cobalt", idmarca=marca_chevrolet.idmarca, idmodelo=14)
-modelo_a3 = Modelo(nome="A3", idmarca=marca_audi.idmarca, idmodelo=15)
 
-astra = Carro(
-    idmodelo=modelo_astra.idmodelo,
-    ano=2007,
-    km=216000,
-    valor=45000,
-    cor="Vermelho Lyra",
-    placa="IRB7A08",
-    disponivel=True,
-)
+def menu_principal():
 
-banco_marca.create_car_brand(marca_ford)
+    try:
+        opc = int(input("[1] Criar carro\n[2] Alterar valor \n[3] Deletar carro \n[4] Marcar como vendido \n[5] Visualizar carros \n[6] Alterar Quilometragem \n[7] Visualizar disponíveis \n[7] Procurar por placa \nSelecione uma opção: "))
+
+        if opc == 1:
+            idmodelo = int(input("Digite o id do modelo: "))
+            ano = int(input("Digite o ano: "))
+            km = int(input("Digite a quilometragem"))
+            valor = int(input("Digite o valor: "))
+            cor = input("Digite a cor: ")
+            placa = input("Digite a placa: ")
+            carro = Carro(idmodelo, ano, km, valor, cor, placa)
+            banco_carro.create_car(carro)
+
+    except Exception as e:
+        raise e
+
+menu_principal()
+
+
+
+
+
+        
+
 
 
 
